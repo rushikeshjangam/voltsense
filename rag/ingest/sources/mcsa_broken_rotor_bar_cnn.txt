@@ -1,0 +1,23 @@
+SOURCE: Valtierra-Rodriguez et al., "Convolutional Neural Network and Motor Current Signature Analysis during the Transient State for Detection of Broken Rotor Bars in Induction Motors"
+URL: https://pmc.ncbi.nlm.nih.gov/articles/PMC7374499/
+PUBLISHER: Sensors (Basel), MDPI, 2020, 20(13):3721
+LICENSE: Creative Commons Attribution (CC BY) 4.0 -- open access, freely reusable with attribution
+RETRIEVED: 2026-06-28
+NOTE: The sideband-frequency formula in SECTION 2.1 below extracted from the source HTML
+with its subscript/superscript markup split into separate text fragments (e.g. "f", "LSFC",
+"=", "(1-2s)", "f", "supply" as disconnected tokens). It has been reflowed into a single
+readable line; this is a mechanical rejoin of the same tokens, not a content change, and is
+flagged inline at the point of use below. All surrounding prose is verbatim.
+
+[SECTION: Abstract]
+Although induction motors (IMs) are robust and reliable electrical machines, they can suffer different faults due to usual operating conditions such as abrupt changes in the mechanical load, voltage, and current power quality problems, as well as due to extended operating conditions. In the literature, different faults have been investigated; however, the broken rotor bar has become one of the most studied faults since the IM can operate with apparent normality but the consequences can be catastrophic if the fault is not detected in low-severity stages. In this work, a methodology based on convolutional neural networks (CNNs) for automatic detection of broken rotor bars by considering different severity levels is proposed. To exploit the capabilities of CNNs to carry out automatic image classification, the short-time Fourier transform-based time-frequency plane and the motor current signature analysis (MCSA) approach for current signals in the transient state are first used. In the experimentation, four IM conditions were considered: half-broken rotor bar, one broken rotor bar, two broken rotor bars, and a healthy rotor. The results demonstrate the effectiveness of the proposal, achieving 100% of accuracy in the diagnosis task for all the study cases.
+
+[SECTION: 1. Introduction]
+IM is considered the most used electrical machine in industrial applications due to its features such as easy maintenance, great performance, low cost, and versatility. Even though IM is a robust and reliable machine, it is susceptible to suffer diverse types of faults during its service life because of different thermal, electrical, and mechanical stresses produced during its operation. Among the faults that can occur in IMs, e.g., broken rotor bars (a cracked bar), damaged bearings, unbalances, mixed eccentricities, and winding faults, among others, the broken rotor bar (BRB) fault (produced by excessive temperature, dynamic forces, and high currents generated into the rotor cage) has become one of the most studied faults, since it allows the IM to operate with apparent normality; however, if the fault is not detected and corrected at stages of low severity, it can lead to the shutdown of processes and cause time and economical losses.
+
+[SECTION: 2.1. Motor Current Signature Analysis]
+MCSA has become one of the most employed approaches for assessing the IM condition. It is used for identifying the frequency components contained in the measured current signals in order to associate them with a specific fault. A BRB fault is characterized by producing sideband frequency components around the supply frequency (e.g., 50 or 60 Hz). In particular, the LSFC (left sideband frequency component) can be mathematically modeled by:
+f_LSFC = (1 - 2s) x f_supply
+[the source paper does not spell out the symbols inline at this point, but defines s as
+rotor slip and f_supply as the power supply frequency elsewhere in the paper -- noted
+here for clarity, not part of the verbatim excerpt above]

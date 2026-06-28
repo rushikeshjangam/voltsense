@@ -1,0 +1,40 @@
+SOURCE: CWRU Bearing Data Center -- Apparatus & Procedures / Bearing Information / Fault Specifications
+URL: https://engineering.case.edu/bearingdatacenter/apparatus-and-procedures
+       https://engineering.case.edu/bearingdatacenter/bearing-information
+       https://engineering.case.edu/bearingdatacenter/fault-specifications
+PUBLISHER: Case Western Reserve University, Case School of Engineering
+LICENSE: Published for research/educational use by CWRU; no commercial redistribution claimed -- excerpted here with attribution for non-commercial educational/portfolio use
+RETRIEVED: 2026-06-28
+NOTE: This is the exact test rig and dataset (SKF 6205-2RS drive-end bearing) used as
+VoltSense's Phase 1 telemetry source. The defect-frequency multipliers below independently
+confirm the values already hardcoded in streaming/step3b_ii_fft_features.py.
+
+[SECTION: Apparatus & Procedures]
+Apparatus & Procedures As shown in Figure 1 above, the test stand consists of a 2 hp motor (left), a torque transducer/encoder (center), a dynamometer (right), and control electronics (not shown). The test bearings support the motor shaft. Single point faults were introduced to the test bearings using electro-discharge machining with fault diameters of 7 mils, 14 mils, 21 mils, 28 mils, and 40 mils (1 mil=0.001 inches). See FAULT SPECIFICATIONS for fault depths. SKF bearings were used for the 7, 14 and 21 mils diameter faults, and NTN equivalent bearings were used for the 28 mil and 40 mil faults. Drive end and fan end bearing specifications, including bearing geometry and defect frequencies are listed in the BEARING SPECIFICATIONS. Vibration data was collected using accelerometers, which were attached to the housing with magnetic bases. Accelerometers were placed at the 12 o'clock position at both the drive end and fan end of the motor housing. During some experiments, an accelerometer was attached to the motor supporting base plate as well. Vibration signals were collected using a 16 channel DAT recorder, and were post processed in a Matlab environment. All data files are in Matlab (*.mat) format. Digital data was collected at 12,000 samples per second, and data was also collected at 48,000 samples per second for drive end bearing faults. Speed and horsepower data were collected using the torque transducer/encoder and were recorded by hand. Outer raceway faults are stationary faults, therefore placement of the fault relative to the load zone of the bearing has a direct impact on the vibration response of the motor/bearing system. In order to quantify this effect, experiments were conducted for both fan and drive end bearings with outer raceway faults located at 3 o'clock (directly in the load zone), at 6 o'clock (orthogonal to the load zone), and at 12 o'clock.
+
+[SECTION: Bearing Information -- geometry & defect-frequency multipliers]
+Bearing Information Drive end bearing: 6205-2RS JEM SKF, deep groove ball bearing. Size (inches): Inside Diameter 0.9843, Outside Diameter 2.0472, Thickness 0.5906, Ball Diameter 0.3126, Pitch Diameter 1.537. Defect frequencies (multiple of running speed in Hz): Inner Ring 5.4152, Outer Ring 3.5848, Cage Train 0.39828, Rolling Element 4.7135. Fan end bearing: 6203-2RS JEM SKF, deep groove ball bearing. Size (inches): Inside Diameter 0.6693, Outside Diameter 1.5748, Thickness 0.4724, Ball Diameter 0.2656, Pitch Diameter 1.122. Defect frequencies (multiple of running speed in Hz): Inner Ring 4.9469, Outer Ring 3.0530, Cage Train 0.3817, Rolling Element 3.9874.
+
+[SECTION: Fault Specifications]
+Fault Specifications. Drive End Inner Raceway: diameter .007in depth .011in (SKF); diameter .014in depth .011in (SKF); diameter .021in depth .011in (SKF); diameter .028in depth .050in (NTN). Drive End Outer Raceway: diameter .007in depth .011in (SKF); diameter .014in depth .011in (SKF); diameter .021in depth .011in (SKF); diameter .040in depth .050in (NTN). Drive End Ball: diameter .007in depth .011in (SKF); diameter .014in depth .011in (SKF); diameter .021in depth .011in (SKF); diameter .028in depth .150in (NTN). Fan End Inner Raceway: diameter .007in depth .011in (SKF); diameter .014in depth .011in (SKF); diameter .021in depth .011in (SKF). Fan End Outer Raceway: diameter .007in depth .011in (SKF); diameter .014in depth .011in (SKF); diameter .021in depth .011in (SKF). Fan End Ball: diameter .007in depth .011in (SKF); diameter .014in depth .011in (SKF); diameter .021in depth .011in (SKF). (All dimensions in inches.)
+
+[SECTION: Bearing Defect Frequency Multipliers (CWRU 6205-2RS JEM SKF, Drive End)]
+Source: Case Western Reserve University Bearing Data Center bearing specification tables, confirmed against streaming/step3b_ii_fft_features.py.
+
+For shaft rotation frequency f_s (Hz) = RPM / 60:
+
+  BPFI (Ball Pass Frequency, Inner Race) = 5.4152 × f_s
+  BPFO (Ball Pass Frequency, Outer Race) = 3.5848 × f_s
+  BSF  (Ball Spin Frequency)             = 2.3574 × f_s
+  FTF  (Fundamental Train Frequency)     = 0.3983 × f_s
+
+At 1797 RPM (0 HP load), f_s = 29.95 Hz:
+  BPFI ≈ 162.2 Hz  — impacts when a rolling element passes an inner-race defect
+  BPFO ≈ 107.4 Hz  — impacts when a rolling element passes an outer-race defect
+  BSF  ≈  70.6 Hz  — impacts from a defect on the rolling element itself
+  FTF  ≈  11.9 Hz  — cage rotation rate; elevated by cage wear
+
+These frequencies appear as spectral peaks in vibration envelope analysis.
+A defect on the inner race produces impacts at BPFI and its harmonics (2×, 3×
+BPFI); sidebands at BPFI ± f_s also appear because the inner race rotates
+with the shaft, amplitude-modulating the impact signal at shaft rate.
