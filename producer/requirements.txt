@@ -1,0 +1,5 @@
+# VoltSense replay producer dependencies (Phase 1 will use these).
+# Pinned conservatively; bump as needed.
+confluent-kafka[avro]==2.6.1
+scipy==1.14.1        # load CWRU .mat files
+numpy==2.1.3

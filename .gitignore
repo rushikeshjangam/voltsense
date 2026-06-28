@@ -1,0 +1,51 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+myenv/
+.python-version
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Datasets (never commit raw data; document the download instead) ---
+data/
+*.mat
+*.csv
+*.parquet
+*.h5
+
+# --- Terraform ---
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+override.tf
+override.tf.json
+
+# --- Secrets / env ---
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+*-key.json
+
+# --- Editor / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Build / logs ---
+dist/
+build/
+*.log
+
+# --- Flink connector JARs (re-downloadable third-party binaries; see streaming/jars/README.md) ---
+streaming/jars/*.jar

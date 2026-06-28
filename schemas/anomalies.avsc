@@ -1,0 +1,32 @@
+{
+  "type": "record",
+  "name": "AnomalyEvent",
+  "namespace": "voltsense.anomalies",
+  "doc": "Phase 1 Step 4: one anomaly-scoring result for one window of one asset, produced by the anomaly detector consuming the 'features' topic. Carries the SCORE and a boolean DECISION from one detection method, plus the triggering time-domain feature values (rms/crest_factor/kurtosis) so a downstream consumer (or human) can see WHY it fired without re-joining back to 'features'. 'method' distinguishes which detector produced this event ('threshold' or 'isolation_forest') -- both methods score every window independently and each emits its own AnomalyEvent, so a single (asset_id, window_index) can appear twice, once per method. 'fault' is passed through as GROUND-TRUTH METADATA ONLY, never an input to detection -- it exists purely so we can compute a confusion matrix after the fact.",
+  "fields": [
+    {"name": "asset_id", "type": "string", "doc": "Asset identifier, carried through from features; also the Kafka partition key."},
+    {"name": "window_index", "type": "long", "doc": "0-based window index within the source recording, carried through from features."},
+    {"name": "timestamp_ms", "type": "long", "doc": "Epoch-ms of the first sample of the window, carried through from features."},
+    {"name": "channel", "type": "string", "doc": "Accelerometer channel the features were computed from."},
+    {"name": "method", "type": "string", "doc": "Which detector produced this event: 'threshold' (z-score vs normal baseline) or 'isolation_forest' (sklearn IsolationForest)."},
+    {"name": "score", "type": "double", "doc": "Method-specific anomaly score. threshold: max absolute z-score across rms/crest_factor/kurtosis. isolation_forest: sklearn's decision_function output (more negative = more anomalous)."},
+    {"name": "is_anomaly", "type": "boolean", "doc": "The method's binary decision: did this window trip the detector?"},
+    {"name": "rms", "type": "double", "doc": "Triggering feature value, carried through from features."},
+    {"name": "crest_factor", "type": "double", "doc": "Triggering feature value, carried through from features."},
+    {"name": "kurtosis", "type": "double", "doc": "Triggering feature value, carried through from features."},
+    {
+      "name": "fault",
+      "type": {
+        "type": "record",
+        "name": "FaultLabel",
+        "doc": "CWRU ground-truth metadata, passed through unchanged. METADATA ONLY -- used only to compute the confusion matrix after detection, never an input to either detector.",
+        "fields": [
+          {"name": "type", "type": "string", "doc": "NORMAL / INNER_RACE / OUTER_RACE / BALL."},
+          {"name": "fault_diameter_in", "type": ["null", "double"], "default": null, "doc": "Defect size in inches; null for NORMAL."},
+          {"name": "load_hp", "type": "int", "doc": "Motor load in HP (0-3)."}
+        ]
+      },
+      "doc": "Ground-truth labels carried from features, for confusion-matrix validation only."
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "type": "record",
+  "name": "RawTelemetry",
+  "namespace": "voltsense.telemetry",
+  "doc": "A single windowed frame of raw accelerometer samples from one channel of one electrical asset, replayed from the CWRU Bearing Data Set as if emitted by a live edge gateway. WHY A WINDOW (not one sample per message): CWRU drive-end data is sampled at 12 kHz, so one-message-per-sample would mean 12,000 msgs/s per channel and the Kafka per-record overhead would dwarf the 4-byte payload. More importantly, bearing-fault signatures live in the frequency domain (FFT / envelope spectrum at BPFO/BPFI/BSF/FTF), which requires a contiguous block of samples, not a scalar. We ship 1024 samples (power-of-two, FFT-friendly; ~85 ms at 12 kHz, several shaft revolutions) so each message is a self-describing analysis-ready frame for the downstream Flink feature job.",
+  "fields": [
+    {
+      "name": "asset_id",
+      "type": "string",
+      "doc": "Logical machine/asset identifier. Kafka partition key so all frames for one asset stay ordered on the same partition (e.g. 'motor-01')."
+    },
+    {
+      "name": "timestamp_ms",
+      "type": "long",
+      "doc": "Epoch milliseconds for the FIRST sample in this window, assigned by the replay producer to mimic a live stream. The per-sample time of sample i is timestamp_ms + i*(1000/sample_rate_hz)."
+    },
+    {
+      "name": "channel",
+      "type": "string",
+      "doc": "Accelerometer location, one of: DE (drive end), FE (fan end), BA (base/baseplate). Not every CWRU file has all three. NOTE: modelled as a plain string (not an Avro enum) on purpose — Avro enums do not round-trip through Flink's avro-confluent format (no enum->string promotion), so string is the portable choice. Allowed values are enforced by the producer, not the schema."
+    },
+    {
+      "name": "sample_rate_hz",
+      "type": "int",
+      "doc": "Sampling frequency of this window in Hz. CWRU files are 12000 or 48000 depending on the collection. Required downstream to map FFT bins to real frequencies."
+    },
+    {
+      "name": "window_index",
+      "type": "long",
+      "doc": "0-based index of this window within the source recording, so consumers can reassemble order and detect gaps."
+    },
+    {
+      "name": "samples",
+      "type": {
+        "type": "array",
+        "items": "float"
+      },
+      "doc": "The window of raw acceleration samples (in g). Expected length 1024; carried as an array of float to stay FFT-ready and language-neutral."
+    },
+    {
+      "name": "fault",
+      "type": {
+        "type": "record",
+        "name": "FaultLabel",
+        "doc": "Ground-truth labels from the CWRU dataset. Carried as metadata for validation/EDA; the streaming pipeline does NOT use these to detect — it must rediscover the fault from the signal.",
+        "fields": [
+          {
+            "name": "type",
+            "type": "string",
+            "doc": "Labelled fault category, one of: NORMAL, INNER_RACE, OUTER_RACE, BALL. Plain string (not an Avro enum) for Flink avro-confluent compatibility; allowed values enforced by the producer."
+          },
+          {
+            "name": "fault_diameter_in",
+            "type": ["null", "double"],
+            "default": null,
+            "doc": "Defect size in inches (e.g. 0.007, 0.014, 0.021). Null for NORMAL recordings."
+          },
+          {
+            "name": "load_hp",
+            "type": "int",
+            "doc": "Motor load in horsepower (0-3), which sets the approximate shaft speed (~1797/1772/1750/1730 RPM for 0/1/2/3 HP)."
+          }
+        ]
+      },
+      "doc": "CWRU ground-truth metadata (fault type, defect size, motor load)."
+    }
+  ]
+}
