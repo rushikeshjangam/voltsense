@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "DiagnosisEvent",
+  "namespace": "voltsense.diagnostics",
+  "doc": "Phase 2 Step 2c: an LLM-generated diagnosis for one anomaly event, produced by rag/serve/diagnose.py from a RetrievalResult (Step 2b). 'diagnosis_text' is the LLM's free-text output (150-200 words); 'cited_sources' is the subset of retrieved chunk URLs the model actually referenced via [n] markers in the text, NOT every chunk that was retrieved -- this distinguishes a citation from an unused retrieval. 'retrieval_scores' preserves the top-k Qdrant cosine scores for observability (e.g. flagging low-confidence diagnoses where no chunk scored highly).",
+  "fields": [
+    {"name": "asset_id", "type": "string", "doc": "Asset identifier, carried through from the anomaly event; also the Kafka partition key."},
+    {"name": "window_index", "type": "long", "doc": "0-based window index, carried through from the anomaly event."},
+    {"name": "fault_type", "type": "string", "doc": "CWRU ground-truth fault type carried through for context/validation only -- not an input the LLM was told to trust blindly over the retrieved evidence."},
+    {"name": "diagnosis_text", "type": "string", "doc": "The LLM's diagnosis: physical mechanism, diagnostic features, recommended action, numbered citations."},
+    {"name": "cited_sources", "type": {"type": "array", "items": "string"}, "doc": "URLs of the retrieved chunks actually cited (via [n] markers) in diagnosis_text."},
+    {"name": "model_used", "type": "string", "doc": "Provider/model identifier, e.g. 'groq:llama-3.3-70b-versatile'. Lets Phase 3's vLLM swap be distinguishable in the data."},
+    {"name": "retrieval_scores", "type": {"type": "array", "items": "double"}, "doc": "Top-k Qdrant cosine similarity scores for the chunks offered to the LLM, in the same order as offered -- for observability, not used by the LLM itself."}
+  ]
+}

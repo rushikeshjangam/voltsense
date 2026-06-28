@@ -35,6 +35,8 @@ override.tf.json
 *.key
 credentials.json
 *-key.json
+grok_key
+groq_key
 
 # --- Editor / OS ---
 .vscode/
